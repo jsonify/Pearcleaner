@@ -50,6 +50,13 @@ class AppState: ObservableObject {
     // Per-app sensitivity level (session-only, not persisted)
     @Published var perAppSensitivity: [String: SearchSensitivityLevel] = [:]
 
+    // Menu bar visibility (persisted to UserDefaults)
+    @Published var showMenuBar: Bool = UserDefaults.standard.bool(forKey: "settings.interface.showMenuBar") {
+        didSet {
+            UserDefaults.standard.set(showMenuBar, forKey: "settings.interface.showMenuBar")
+        }
+    }
+
     func getBundleSize(for appInfo: AppInfo, updateState: @escaping (Int64) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             // Step 1: Check if the size is available and not 0 in the sortedApps cache
