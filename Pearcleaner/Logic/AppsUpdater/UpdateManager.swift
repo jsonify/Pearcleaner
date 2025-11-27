@@ -568,6 +568,9 @@ class UpdateManager: ObservableObject {
 
         lastScanDate = Date()
 
+        // Publish update count to menu bar
+        publishToMenuBar()
+
         // Print formatted debug report to console after scan completes
         if debugLogging {
             printOS("\n" + UpdaterDebugLogger.shared.generateDebugReport())
@@ -1014,5 +1017,24 @@ class UpdateManager: ObservableObject {
         }
 
         await loadAppsAsync(folderPaths: folderPaths, useStreaming: false)
+    }
+
+    // MARK: - Menu Bar Publishing
+
+    /// Publishes update count and last check timestamp to shared App Group storage
+    /// for consumption by menu bar components
+    private func publishToMenuBar() {
+        // Calculate total update count from all sources
+        let totalCount = updatesBySource.values.reduce(0) { sum, apps in
+            sum + apps.count
+        }
+
+        // Publish to shared storage
+        let publisher = MenuBarUpdatePublisher.shared
+        let success = publisher.publishUpdate(count: totalCount, lastCheck: lastScanDate ?? Date())
+
+        if !success {
+            printOS("UpdateManager: Failed to publish update count to menu bar")
+        }
     }
 }
