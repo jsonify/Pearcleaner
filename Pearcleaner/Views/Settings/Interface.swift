@@ -207,6 +207,29 @@ struct InterfaceSettingsTab: View {
 
 
                     HStack(spacing: 0) {
+                        Image(systemName: appState.showMenuBar ? "menubar.dock.rectangle" : "menubar.dock.rectangle.badge.record")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 15, height: 15)
+                            .padding(.trailing)
+                            .foregroundStyle(ThemeColors.shared(for: colorScheme).primaryText)
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(appState.showMenuBar ? String(localized: "Menu bar icon enabled") : String(localized: "Menu bar icon disabled"))
+                                .font(.callout)
+                                .foregroundStyle(ThemeColors.shared(for: colorScheme).primaryText)
+                            Text("Show update count and quick actions in menu bar")
+                                .font(.caption2)
+                                .foregroundStyle(ThemeColors.shared(for: colorScheme).secondaryText)
+                        }
+                        Spacer()
+                        Toggle(isOn: $appState.showMenuBar, label: {
+                        })
+                        .toggleStyle(SettingsToggle())
+                    }
+                    .padding(5)
+
+
+                    HStack(spacing: 0) {
                         Image(systemName: "arrow.uturn.forward")
                             .resizable()
                             .scaledToFit()
