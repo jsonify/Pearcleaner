@@ -54,6 +54,16 @@ struct PearcleanerApp: App {
         .commands {
             AppCommands(appState: appState, locations: locations, fsm: fsm, updater: updater)
         }
+
+        // MARK: - Menu Bar Extra
+        if appState.showMenuBar {
+            MenuBarExtra {
+                MenuBarContent(manager: MenuBarManager.shared)
+            } label: {
+                MenuBarIconView(manager: MenuBarManager.shared)
+            }
+            .menuBarExtraStyle(.window)
+        }
     }
 }
 
@@ -63,7 +73,9 @@ struct PearcleanerApp: App {
 class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
-        return true
+        // If menu bar is enabled, keep app running even when window is closed
+        // Otherwise, terminate when last window closes (original behavior)
+        return !AppState.shared.showMenuBar
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
